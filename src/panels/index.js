@@ -1,2 +1,2 @@
-export { Persik } from './Persik';
+export { NewsPage } from './NewsPage';
 export { Home } from './Home';
