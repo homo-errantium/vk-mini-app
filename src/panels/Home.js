@@ -1,53 +1,19 @@
-import {
-    Panel,
-    PanelHeader,
-    Header,
-    Button,
-    Group,
-    Cell,
-    Div,
-    Avatar,
-} from '@vkontakte/vkui';
-import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
+import { Panel, PanelHeader, Header, Group } from '@vkontakte/vkui';
 import PropTypes from 'prop-types';
+import { NewsCard } from '../components/newsCard';
 
-export const Home = ({ id, fetchedUser }) => {
-    const { photo_200, city, first_name, last_name } = { ...fetchedUser };
-    const routeNavigator = useRouteNavigator();
-
+export const Home = ({ id, fetchedData, setNewsItemID }) => {
     return (
         <Panel id={id}>
             <PanelHeader>Главная</PanelHeader>
-            {fetchedUser && (
-                <Group
-                    header={
-                        <Header mode='secondary'>
-                            User Data Fetched with VK Bridge
-                        </Header>
-                    }
-                >
-                    <Cell
-                        before={photo_200 && <Avatar src={photo_200} />}
-                        subtitle={city?.title}
-                    >
-                        {`${first_name} ${last_name}`}
-                    </Cell>
-                </Group>
-            )}
-
-            <Group
-                header={<Header mode='secondary'>Navigation Example</Header>}
-            >
-                <Div>
-                    <Button
-                        stretched
-                        size='l'
-                        mode='secondary'
-                        onClick={() => routeNavigator.push('newsPage')}
-                    >
-                        Открыть новость
-                    </Button>
-                </Div>
+            <Group header={<Header mode='secondary'>Hacker News</Header>}>
+                {fetchedData.slice(0, 100).map((storyId, i) => (
+                    <NewsCard
+                        storyId={storyId}
+                        key={i}
+                        setNewsItemID={setNewsItemID}
+                    />
+                ))}
             </Group>
         </Panel>
     );
@@ -55,12 +21,14 @@ export const Home = ({ id, fetchedUser }) => {
 
 Home.propTypes = {
     id: PropTypes.string.isRequired,
-    fetchedUser: PropTypes.shape({
-        photo_200: PropTypes.string,
-        first_name: PropTypes.string,
-        last_name: PropTypes.string,
-        city: PropTypes.shape({
-            title: PropTypes.string,
-        }),
-    }),
+    fetchedData: PropTypes.any,
+    setNewsItemID: PropTypes.func,
+    // fetchedData: PropTypes.shape({
+    //     photo_200: PropTypes.string,
+    //     first_name: PropTypes.string,
+    //     last_name: PropTypes.string,
+    //     city: PropTypes.shape({
+    //         title: PropTypes.string,
+    //     }),
+    // }),
 };

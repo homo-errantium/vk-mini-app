@@ -6,9 +6,8 @@ import {
 } from '@vkontakte/vkui';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import PropTypes from 'prop-types';
-import PersikImage from '../assets/persik.png';
 
-export const NewsPage = ({ id }) => {
+export const NewsPage = ({ id, newsItemID }) => {
     const routeNavigator = useRouteNavigator();
 
     return (
@@ -21,7 +20,7 @@ export const NewsPage = ({ id }) => {
                 News
             </PanelHeader>
             <Placeholder>
-                <img width={230} src={PersikImage} alt='Persik The Cat' />
+                <h2>{newsItemID}</h2>
             </Placeholder>
         </Panel>
     );
@@ -29,4 +28,5 @@ export const NewsPage = ({ id }) => {
 
 NewsPage.propTypes = {
     id: PropTypes.string.isRequired,
+    newsItemID: PropTypes.number.isRequired,
 };
