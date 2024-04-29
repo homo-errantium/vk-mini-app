@@ -1,27 +1,27 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import {
     Panel,
     PanelHeader,
     PanelHeaderBack,
-    Placeholder,
+    // Placeholder,
 } from '@vkontakte/vkui';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import PropTypes from 'prop-types';
-import { getStory } from '../services/api';
+// import { getStory } from '../services/api';
+import { NewsPageContent } from '../components/newsPageContent';
 
 export const NewsPage = ({ id, newsItemID }) => {
     const routeNavigator = useRouteNavigator();
-    const [newsItem, setNewsItem] = useState({});
+    // const [newsItem, setNewsItem] = useState({});
 
-    useEffect(() => {
-        getStory(newsItemID).then((data) => {
-            if (data && data.url) {
-                setNewsItem(data);
-                console.log(data);
-            }
-        });
-    }, []);
-    const { title, url, score, by, time } = newsItem;
+    // useEffect(() => {
+    //     getStory(newsItemID).then((data) => {
+    //         if (data && data.url) {
+    //             setNewsItem(data);
+    //             console.log(data);
+    //         }
+    //     });
+    // }, []);
 
     return (
         <Panel id={id}>
@@ -32,7 +32,7 @@ export const NewsPage = ({ id, newsItemID }) => {
             >
                 News
             </PanelHeader>
-            <Placeholder>{(title, url, score, by, time)}</Placeholder>
+            <NewsPageContent newsItemID={newsItemID} />
         </Panel>
     );
 };

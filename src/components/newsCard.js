@@ -9,18 +9,18 @@ export const NewsCard = ({ storyId, setNewsItemID }) => {
     function redirectNewsItem(id) {
         setNewsItemID(id), routeNavigator.push('newsPage');
     }
-    const [story, setStory] = useState({});
+    const [newsItem, setNewsItem] = useState({});
 
     useEffect(() => {
         getStory(storyId).then((data) => {
             if (data && data.url) {
-                setStory(data);
+                setNewsItem(data);
             }
         });
     }, []);
 
-    const { title, url, score, by, time } = story;
-    return story && url ? (
+    const { title, url, score, by, time } = newsItem;
+    return newsItem && url ? (
         <ContentCard
             onClick={() => redirectNewsItem(storyId)}
             subtitle={`Дата публикации: ${new Date(
