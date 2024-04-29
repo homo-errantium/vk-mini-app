@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "start": "vite --port 3000",
+        "start": "cross-env  HTTPS=true vite --port 3000",
         "build": "vite build",
         "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
@@ -26,6 +26,7 @@
         "@vitejs/plugin-react": "^4.2.1",
         "@vkontakte/vk-miniapps-deploy": "^0.1.6",
         "@vkontakte/vk-tunnel": "^0.2.0",
+        "cross-env": "^7.0.3",
         "eruda": "^3.0.1",
         "esbuild": "~0.20.0",
         "eslint": "^8.55.0",

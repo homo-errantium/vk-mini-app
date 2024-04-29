@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { getStory } from '../services/api';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
-import { Div, Button } from '@vkontakte/vkui';
+import { ContentCard } from '@vkontakte/vkui';
 import PropTypes from 'prop-types';
 
 export const NewsCard = ({ storyId, setNewsItemID }) => {
-    function changeNewsItemID(id) {
+    const routeNavigator = useRouteNavigator();
+    function redirectNewsItem(id) {
         setNewsItemID(id), routeNavigator.push('newsPage');
     }
-    const routeNavigator = useRouteNavigator();
     const [story, setStory] = useState({});
+
     useEffect(() => {
         getStory(storyId).then((data) => {
             if (data && data.url) {
@@ -17,18 +18,23 @@ export const NewsCard = ({ storyId, setNewsItemID }) => {
             }
         });
     }, []);
-    const { title, kids, id, url } = story;
+
+    const { title, url, score, by, time } = story;
     return story && url ? (
-        <Div key={storyId}>
-            <Button
-                stretched
-                size='l'
-                mode='secondary'
-                onClick={() => changeNewsItemID(storyId)}
-            >
-                {(title, kids, id, url)}
-            </Button>
-        </Div>
+        <ContentCard
+            onClick={() => redirectNewsItem(storyId)}
+            subtitle={`Дата публикации: ${new Date(
+                time * 1000
+            ).toLocaleString()}`}
+            header={`Автор: ${by}`}
+            text={`${title}`}
+            caption={`рейтинг: ${score}`}
+            maxHeight={150}
+            style={{
+                marginBottom: 10,
+            }}
+            mode='shadow'
+        />
     ) : null;
 };
 

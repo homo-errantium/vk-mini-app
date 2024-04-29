@@ -10,24 +10,39 @@ import { getStories } from './services/api';
 export const App = () => {
     const { panel: activePanel = DEFAULT_VIEW_PANELS.HOME } =
         useActiveVkuiLocation();
-    const [fetchedNews, setFetchedNews] = useState([]);
+    const [fetchedNewsID, setFetchedNewsID] = useState([]);
     const [newsItemID, setNewsItemID] = useState();
 
     // const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+    const getNews = () => {
+        getStories().then((ids) => setFetchedNewsID(ids.sort(compare)));
+        console.log(
+            `данные обновились в ${new Date().getHours()}:${new Date().getMinutes()}`
+        );
+    };
+
+    function compare(a, b) {
+        if (a < b) return 1;
+        if (a == b) return 0;
+        if (a > b) return -1;
+    }
 
     useEffect(() => {
-        getStories().then((ids) => setFetchedNews(ids));
+        getNews();
+
+        const intervalId = setInterval(getNews, 60000);
+        return () => clearInterval(intervalId);
     }, []);
 
-    console.log('🚀 ~ App ~ fetchedNews:', fetchedNews);
-
+    // setInterval(getNews, 5000);
     return (
         <SplitLayout /*popout={popout}*/>
             <SplitCol>
                 <View activePanel={activePanel}>
                     <Home
                         id='home'
-                        fetchedData={fetchedNews}
+                        getNews={getNews}
+                        fetchedData={fetchedNewsID}
                         setNewsItemID={setNewsItemID}
                     />
                     <NewsPage id='newsPage' newsItemID={newsItemID} />
