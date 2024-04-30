@@ -1,52 +1,96 @@
-import { Panel, PanelHeader, Header, Group, Button } from '@vkontakte/vkui';
+import {
+    Panel,
+    PanelHeader,
+    Header,
+    Group,
+    IconButton,
+    VisuallyHidden,
+    PanelSpinner,
+} from '@vkontakte/vkui';
 import PropTypes from 'prop-types';
 import { NewsCard } from '../components/newsCard';
-// import { useEffect, useState } from 'react';
-// import { getStory } from '../services/api';
+import { useEffect, useState, useCallback } from 'react';
+import { getNewsData } from '../services/api';
+import { Icon28SwitchOutline } from '@vkontakte/icons';
 
-export const Home = ({ id, fetchedData, setNewsItemID, getNews }) => {
+export const Home = ({ id, setNewsItemID }) => {
+    // массив индексов новостей
+    const [fetchedNewsID, setFetchedNewsID] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // взятие и установка массива
+    const getNews = useCallback(() => {
+        setIsLoading(true);
+        getNewsData().then((ids) => setFetchedNewsID(ids.sort(compare)));
+        // console.log(
+        //     `данные обновились в ${new Date().getHours()}:${new Date().getMinutes()}`
+        // );
+        setIsLoading(false);
+    }, []);
+
+    // принцип сравнения в массиве
+    function compare(a, b) {
+        return a < b ? 1 : a > b ? -1 : 0;
+    }
+
+    //первичное взятие массива и установка таймера обновления
+    useEffect(() => {
+        getNews();
+
+        const intervalId = setInterval(getNews, 60000);
+        return () => clearInterval(intervalId);
+    }, [getNews]);
+
     return (
         <Panel id={id}>
-            <PanelHeader>Главная</PanelHeader>
-            <Group header={<Header mode='secondary'>Hacker News</Header>}>
-                <Button
-                    mode='outline'
-                    activated='true'
-                    appearance='neutral'
-                    size='s'
-                    onClick={() => {
-                        getNews();
-                    }}
-                    style={{
-                        marginBottom: 16,
-                    }}
+            <PanelHeader>Hacker News</PanelHeader>
+
+            {isLoading ? (
+                <PanelSpinner size={'large'}>
+                    загружается, пожалуйста, подождите...
+                </PanelSpinner>
+            ) : (
+                <Group
+                    style={{ margin: 10 }}
+                    header={
+                        <Header
+                            style={{
+                                marginBottom: 10,
+                            }}
+                            size='large'
+                            mode='secondary'
+                        >
+                            Home
+                        </Header>
+                    }
                 >
-                    Обновить новости
-                </Button>
-                {fetchedData.slice(0, 100).map((storyId, i) => (
-                    <NewsCard
-                        style={{ margin: 16 }}
-                        storyId={storyId}
-                        key={i}
-                        setNewsItemID={setNewsItemID}
-                    />
-                ))}
-            </Group>
+                    <IconButton
+                        borderRadiusMode='auto'
+                        hovered='true'
+                        style={{
+                            marginBottom: 16,
+                        }}
+                        onClick={() => {
+                            getNews();
+                        }}
+                    >
+                        <VisuallyHidden>Обновить</VisuallyHidden>
+                        <Icon28SwitchOutline />
+                    </IconButton>
+                    {fetchedNewsID.slice(0, 100).map((storyId, i) => (
+                        <NewsCard
+                            storyId={storyId}
+                            key={storyId}
+                            setNewsItemID={setNewsItemID}
+                        />
+                    ))}
+                </Group>
+            )}
         </Panel>
     );
 };
 
 Home.propTypes = {
-    id: PropTypes.string.isRequired,
-    fetchedData: PropTypes.any,
+    id: PropTypes.number.isRequired,
     setNewsItemID: PropTypes.func,
-    getNews: PropTypes.func,
-    // fetchedData: PropTypes.shape({
-    //     photo_200: PropTypes.string,
-    //     first_name: PropTypes.string,
-    //     last_name: PropTypes.string,
-    //     city: PropTypes.shape({
-    //         title: PropTypes.string,
-    //     }),
-    // }),
 };

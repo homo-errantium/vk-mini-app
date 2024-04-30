@@ -31,7 +31,7 @@ export const NewsCard = ({ storyId, setNewsItemID }) => {
             caption={`рейтинг: ${score}`}
             maxHeight={150}
             style={{
-                marginBottom: 10,
+                marginBottom: 20,
             }}
             mode='shadow'
         />

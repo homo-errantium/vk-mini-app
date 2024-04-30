@@ -4,7 +4,7 @@ export const baseUrl = 'https://hacker-news.firebaseio.com/v0';
 export const newStoriesUrl = `${baseUrl}/topstories.json`;
 export const itemUrl = `${baseUrl}/item/`;
 
-export const getStories = async () => {
+export const getNewsData = async () => {
     try {
         const res = await axios.get(newStoriesUrl).then(({ data }) => data);
         return res;
