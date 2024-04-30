@@ -34,3 +34,14 @@ export const getComment = async (commentId) => {
         console.error(err);
     }
 };
+
+export const getKidComment = async (commentId) => {
+    try {
+        const res = await axios
+            .get(`${itemUrl + commentId}.json`)
+            .then(({ data }) => data);
+        return res;
+    } catch (err) {
+        console.error(err);
+    }
+};

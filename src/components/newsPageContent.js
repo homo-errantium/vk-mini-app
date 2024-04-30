@@ -13,10 +13,10 @@ import PropTypes from 'prop-types';
 import { NewsCommentCard } from './newsCommentCard';
 
 export const NewsPageContent = ({ newsItemID }) => {
+    const [KidCommentsArr, setKidCommentsArr] = useState([]);
     const [newsCommentsArr, setNewsCommentsArr] = useState([]);
     const [newsPageData, setNewsPageData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    let commentsArray = [];
 
     const getNewsComment = async (kids) => {
         await kids.map(
@@ -31,7 +31,18 @@ export const NewsPageContent = ({ newsItemID }) => {
         );
     };
 
-    console.log(newsCommentsArr);
+    const getKidComment = async (kids) => {
+        await kids.map((commentId) =>
+            getComment(commentId).then((comment) =>
+                setKidCommentsArr((KidCommentsArr) => [
+                    ...KidCommentsArr,
+                    comment,
+                ])
+            )
+        );
+        console.log(KidCommentsArr);
+    };
+
     const getNewsInfo = async () => {
         await getStory(newsItemID).then((data) => {
             if (data && data.url) {
@@ -40,6 +51,10 @@ export const NewsPageContent = ({ newsItemID }) => {
             }
             if (data && data.kids) {
                 getNewsComment(data.kids);
+                console.log(data.kids); //data.kids - массив прямых комментариев
+
+                getKidComment(data.kids);
+                // console.log(KidCommentsArr);
             }
         });
     };
@@ -84,6 +99,7 @@ export const NewsPageContent = ({ newsItemID }) => {
                         time={commentObj.time}
                         kids={commentObj.kids}
                         text={commentObj.text}
+                        KidCommentsArr={KidCommentsArr}
                     />
                 ))}
             </Div>

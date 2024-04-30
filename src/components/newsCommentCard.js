@@ -1,30 +1,54 @@
 import PropTypes from 'prop-types';
 import {
-    ContentCard,
     Headline,
     Caption,
-    Subhead,
-    // Footnote,
     Paragraph,
-    Tappable,
-    Div,
     Card,
+    Button,
+    Div,
 } from '@vkontakte/vkui';
-export const NewsCommentCard = ({ by, time, kids, text }) => {
+import { KidCommentCard } from './kidCommentCard copy';
+import { useState } from 'react';
+
+export const NewsCommentCard = ({ by, time, kids, text, KidCommentsArr }) => {
+    const [isHidden, setIsHidden] = useState(true);
+
+    const handleCommentsButton = () => {
+        setIsHidden(!isHidden);
+    };
+    console.log('🚀 ~ NewsCommentCard ~ KidCommentsArr:', KidCommentsArr);
     return (
-        <Card>
-            {/* <Tappable onClick={console.log} activeMode='background' hasActive> */}
+        <Card
+            style={{
+                marginTop: 20,
+                marginBottom: 20,
+                padding: 10,
+            }}
+        >
             <Paragraph>{text}</Paragraph>
-            <Subhead>{`${kids ? kids.length : 0} comments`}</Subhead>
-            {/* <Subhead>{`${parent}`}</Subhead> */}
-            {/* <Footnote> {`ссылка на новость: ${url}`}</Footnote> */}
             <Headline level='1' style={{ marginBottom: 16 }}>
                 {`Автор: ${by}`}
             </Headline>
             <Caption level='1' style={{ marginBottom: 16 }}>
                 {`${new Date(time * 1000).toLocaleString()}`}
             </Caption>
-            {/* </Tappable> */}
+            <Button align='right' onClick={handleCommentsButton}>{`${
+                kids ? kids.length : 0
+            } comments`}</Button>
+            <Div
+                style={{
+                    display: `${isHidden ? 'none' : 'block'}`,
+                }}
+            >
+                {KidCommentsArr?.map((commentObj) => (
+                    <KidCommentCard
+                        key={commentObj.id}
+                        by={commentObj.by}
+                        time={commentObj.time}
+                        text={commentObj.text}
+                    />
+                ))}
+            </Div>
         </Card>
     );
 };
@@ -34,4 +58,5 @@ NewsCommentCard.propTypes = {
     text: PropTypes.string,
     kids: PropTypes.array,
     time: PropTypes.number,
+    KidCommentsArr: PropTypes.array,
 };
