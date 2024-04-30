@@ -7,16 +7,32 @@ import {
     Button,
     Div,
 } from '@vkontakte/vkui';
-import { KidCommentCard } from './kidCommentCard copy';
-import { useState } from 'react';
+import { KidCommentCard } from './kidCommentCard';
+import { useEffect, useState } from 'react';
+import { getComment } from '../services/api';
 
-export const NewsCommentCard = ({ by, time, kids, text, KidCommentsArr }) => {
+export const NewsCommentCard = ({ by, time, kids, text }) => {
     const [isHidden, setIsHidden] = useState(true);
+    const [KidCommentsArr, setKidCommentsArr] = useState([]);
 
-    const handleCommentsButton = () => {
+    const getKidComment = async () => {
+        await kids?.map((commentId) =>
+            getComment(commentId).then((comment) =>
+                setKidCommentsArr((KidCommentsArr) => [
+                    ...KidCommentsArr,
+                    comment,
+                ])
+            )
+        );
+    };
+
+    const handleCommentsButton = async () => {
         setIsHidden(!isHidden);
     };
-    console.log('🚀 ~ NewsCommentCard ~ KidCommentsArr:', KidCommentsArr);
+
+    useEffect(() => {
+        getKidComment();
+    }, []);
     return (
         <Card
             style={{
@@ -40,9 +56,9 @@ export const NewsCommentCard = ({ by, time, kids, text, KidCommentsArr }) => {
                     display: `${isHidden ? 'none' : 'block'}`,
                 }}
             >
-                {KidCommentsArr?.map((commentObj) => (
+                {KidCommentsArr?.map((commentObj, i) => (
                     <KidCommentCard
-                        key={commentObj.id}
+                        key={i}
                         by={commentObj.by}
                         time={commentObj.time}
                         text={commentObj.text}

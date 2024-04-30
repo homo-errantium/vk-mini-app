@@ -13,9 +13,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { getNewsData } from '../services/api';
 import { Icon28SwitchOutline } from '@vkontakte/icons';
 
-export const Home = ({ id, setNewsItemID }) => {
+export const Home = ({ id }) => {
     // массив индексов новостей
     const [fetchedNewsID, setFetchedNewsID] = useState([]);
+
+    // стейт загрузки
     const [isLoading, setIsLoading] = useState(true);
 
     // взятие и установка массива
@@ -77,12 +79,9 @@ export const Home = ({ id, setNewsItemID }) => {
                         <VisuallyHidden>Обновить</VisuallyHidden>
                         <Icon28SwitchOutline />
                     </IconButton>
+                    {/* отрисовка каждого ID в карточке */}
                     {fetchedNewsID.slice(0, 100).map((storyId, i) => (
-                        <NewsCard
-                            storyId={storyId}
-                            key={storyId}
-                            setNewsItemID={setNewsItemID}
-                        />
+                        <NewsCard storyId={i} key={storyId} />
                     ))}
                 </Group>
             )}
@@ -91,6 +90,6 @@ export const Home = ({ id, setNewsItemID }) => {
 };
 
 Home.propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     setNewsItemID: PropTypes.func,
 };

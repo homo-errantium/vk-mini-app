@@ -13,7 +13,7 @@ export const getNewsData = async () => {
     }
 };
 
-export const getStory = async (storyId) => {
+export const getNewsItemData = async (storyId) => {
     try {
         const res = await axios
             .get(`${itemUrl + storyId}.json`)

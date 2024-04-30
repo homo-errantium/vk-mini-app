@@ -1,28 +1,17 @@
-// import { useEffect, useState } from 'react';
-import {
-    Panel,
-    PanelHeader,
-    PanelHeaderBack,
-    // Placeholder,
-} from '@vkontakte/vkui';
+import { Panel, PanelHeader, PanelHeaderBack } from '@vkontakte/vkui';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import PropTypes from 'prop-types';
-// import { getStory } from '../services/api';
 import { NewsPageContent } from '../components/newsPageContent';
+import { useEffect, useState } from 'react';
 
-export const NewsPage = ({ id, newsItemID }) => {
+export const NewsPage = ({ id }) => {
+    const [newsItemID, setNewsItemID] = useState();
     const routeNavigator = useRouteNavigator();
-    // const [newsItem, setNewsItem] = useState({});
 
-    // useEffect(() => {
-    //     getStory(newsItemID).then((data) => {
-    //         if (data && data.url) {
-    //             setNewsItem(data);
-    //             console.log(data);
-    //         }
-    //     });
-    // }, []);
-
+    useEffect(() => {
+        setNewsItemID(reactLocalStorage.get('newItemId'));
+    }, []);
     return (
         <Panel id={id}>
             <PanelHeader
@@ -39,5 +28,5 @@ export const NewsPage = ({ id, newsItemID }) => {
 
 NewsPage.propTypes = {
     id: PropTypes.string.isRequired,
-    newsItemID: PropTypes.number,
+    newsItemID: PropTypes.string,
 };

@@ -1,110 +1,126 @@
-import { useEffect, useState } from 'react';
-import { getStory, getComment } from '../services/api';
+import { useCallback, useEffect, useState } from 'react';
+import { getNewsItemData, getComment } from '../services/api';
 import {
-    Div,
+    Header,
     Title,
     Footnote,
-    Caption,
     Headline,
     Subhead,
     Group,
+    PanelSpinner,
+    Card,
 } from '@vkontakte/vkui';
 import PropTypes from 'prop-types';
 import { NewsCommentCard } from './newsCommentCard';
 
 export const NewsPageContent = ({ newsItemID }) => {
-    const [KidCommentsArr, setKidCommentsArr] = useState([]);
+    // массив индексов корневых комментариев
     const [newsCommentsArr, setNewsCommentsArr] = useState([]);
+
+    // объект конкретной новости
     const [newsPageData, setNewsPageData] = useState({});
+
+    // стейт загрузки
     const [isLoading, setIsLoading] = useState(true);
 
+    //ф-я взятия и установки массива корневых комментариев
     const getNewsComment = async (kids) => {
-        await kids.map(
-            (commentId) =>
-                getComment(commentId).then((comment) =>
-                    setNewsCommentsArr((newsCommentsArr) => [
-                        ...newsCommentsArr,
-                        comment,
-                    ])
-                )
-            // getComment(commentId).then((comment) => commentsArray.push(comment))
-        );
-    };
-
-    const getKidComment = async (kids) => {
         await kids.map((commentId) =>
             getComment(commentId).then((comment) =>
-                setKidCommentsArr((KidCommentsArr) => [
-                    ...KidCommentsArr,
+                setNewsCommentsArr((newsCommentsArr) => [
+                    ...newsCommentsArr,
                     comment,
                 ])
             )
         );
-        console.log(KidCommentsArr);
     };
 
-    const getNewsInfo = async () => {
-        await getStory(newsItemID).then((data) => {
-            if (data && data.url) {
+    // ф-я взятия и установки информации о конкретной новости
+    const getNewsItemInfo = useCallback(async () => {
+        setIsLoading(true);
+        await getNewsItemData(newsItemID).then((data) => {
+            if (data) {
                 setNewsPageData(data);
-                setIsLoading(false);
-            }
-            if (data && data.kids) {
-                getNewsComment(data.kids);
-                console.log(data.kids); //data.kids - массив прямых комментариев
-
-                getKidComment(data.kids);
-                // console.log(KidCommentsArr);
+                if (data.kids) {
+                    getNewsComment(data.kids);
+                }
             }
         });
-    };
+        setIsLoading(false);
+    }, [newsItemID]);
 
+    //первичное взятие информации о конкретной новости
     useEffect(() => {
-        Promise.all([getNewsInfo()]);
-    }, []);
+        getNewsItemInfo();
+    }, [getNewsItemInfo]);
 
     const { title, url, by, time, kids } = newsPageData;
 
-    if (!isLoading)
-        return (
-            <Div style={{ padding: 20 }}>
-                <Group
-                    mode='plain'
-                    separator='auto'
+    return isLoading ? (
+        <PanelSpinner size={'large'}>
+            загружается, пожалуйста, подождите...
+        </PanelSpinner>
+    ) : (
+        <Group
+            style={{ margin: 10 }}
+            header={
+                <Header
                     style={{
-                        background: 'grey',
-                        borderRadius: 5,
-                        padding: 5,
+                        marginBottom: 10,
+                    }}
+                    size='large'
+                    mode='secondary'
+                >
+                    News page
+                </Header>
+            }
+        >
+            <Card
+                style={{
+                    marginBottom: 10,
+                    padding: 15,
+                }}
+                mode='shadow'
+            >
+                <Title level='1' style={{ marginBottom: 15 }}>
+                    {title}
+                </Title>
+                <Headline level='2' style={{ marginBottom: 15 }}>
+                    {`Автор: ${by}`}
+                </Headline>
+                <Footnote
+                    style={{ fontSize: 16, marginBottom: 15 }}
+                    weight='3'
+                >{`Дата публикации: ${new Date(
+                    time * 1000
+                ).toLocaleString()}`}</Footnote>
+
+                <Footnote style={{ fontSize: 16, marginBottom: 20 }} weight='3'>
+                    {`ссылка на новость: ${url}`}
+                </Footnote>
+                <Subhead>{kids && `${kids.length} comments`}</Subhead>
+                <Group
+                    style={{
+                        position: 'static',
+                        padding: 0,
+                        marginLeft: 15,
+                        backgroundColor: 'inherit',
                     }}
                 >
-                    <Caption level='1' style={{ marginBottom: 16 }}>
-                        {`Дата публикации: ${new Date(
-                            time * 1000
-                        ).toLocaleString()}`}
-                    </Caption>
-                    <Headline level='1' style={{ marginBottom: 16 }}>
-                        {`Автор: ${by}`}
-                    </Headline>
-                    <Title level='1' style={{ marginBottom: 16 }}>
-                        {title}
-                    </Title>
-                    <Subhead>{`${kids ? kids.length : 0} comments`}</Subhead>
-                    <Footnote> {`ссылка на новость: ${url}`}</Footnote>
+                    {newsCommentsArr.map((commentObj, i) => (
+                        <NewsCommentCard
+                            key={i}
+                            by={commentObj.by}
+                            time={commentObj.time}
+                            kids={commentObj.kids}
+                            text={commentObj.text}
+                        />
+                    ))}
                 </Group>
-
-                {newsCommentsArr.map((commentObj) => (
-                    <NewsCommentCard
-                        key={commentObj.id}
-                        by={commentObj.by}
-                        time={commentObj.time}
-                        kids={commentObj.kids}
-                        text={commentObj.text}
-                        KidCommentsArr={KidCommentsArr}
-                    />
-                ))}
-            </Div>
-        );
+            </Card>
+        </Group>
+    );
 };
 NewsPageContent.propTypes = {
-    newsItemID: PropTypes.number,
+    newsItemID: PropTypes.string,
 };

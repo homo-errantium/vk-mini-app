@@ -1,44 +1,65 @@
 import { useEffect, useState } from 'react';
-import { getStory } from '../services/api';
+import { getNewsItemData } from '../services/api';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
-import { ContentCard } from '@vkontakte/vkui';
+import { Card, Title, Headline, Footnote } from '@vkontakte/vkui';
 import PropTypes from 'prop-types';
+import { reactLocalStorage } from 'reactjs-localstorage';
 
-export const NewsCard = ({ storyId, setNewsItemID }) => {
+export const NewsCard = ({ storyId }) => {
     const routeNavigator = useRouteNavigator();
-    function redirectNewsItem(id) {
-        setNewsItemID(id), routeNavigator.push('newsPage');
+
+    // ф-я перенаправления на страницу новости
+    function redirectNewsItem() {
+        reactLocalStorage.set('newItemId', storyId);
+        routeNavigator.push('newsPage');
     }
+
+    // объект отдельной новости
     const [newsItem, setNewsItem] = useState({});
 
+    // взятие данных об отдельной новости
     useEffect(() => {
-        getStory(storyId).then((data) => {
-            if (data && data.url) {
+        getNewsItemData(storyId).then((data) => {
+            if (data) {
                 setNewsItem(data);
             }
         });
-    }, []);
+    }, [storyId]);
 
+    // взятие дочерних элементов
     const { title, url, score, by, time } = newsItem;
+
     return newsItem && url ? (
-        <ContentCard
+        <Card
             onClick={() => redirectNewsItem(storyId)}
-            subtitle={`Дата публикации: ${new Date(
-                time * 1000
-            ).toLocaleString()}`}
-            header={`Автор: ${by}`}
-            text={`${title}`}
-            caption={`рейтинг: ${score}`}
-            maxHeight={150}
             style={{
-                marginBottom: 20,
+                marginBottom: 10,
+                padding: 15,
             }}
             mode='shadow'
-        />
+        >
+            <Title level='1' style={{ marginBottom: 15 }}>
+                {title}
+            </Title>
+            <Headline level='2' style={{ marginBottom: 15 }}>
+                {`Автор: ${by}`}
+            </Headline>
+
+            <Footnote
+                style={{ fontSize: 16, marginBottom: 15 }}
+                weight='3'
+            >{`Дата публикации: ${new Date(
+                time * 1000
+            ).toLocaleString()}`}</Footnote>
+            <Footnote
+                style={{ fontSize: 16 }}
+                weight='3'
+            >{`рейтинг: ${score}`}</Footnote>
+        </Card>
     ) : null;
 };
 
 NewsCard.propTypes = {
     storyId: PropTypes.number.isRequired,
-    setNewsItemID: PropTypes.func,
+    // setNewsItemID: PropTypes.func.isRequired,
 };
