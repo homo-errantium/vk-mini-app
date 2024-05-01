@@ -24,9 +24,9 @@ export const Home = ({ id }) => {
     const getNews = useCallback(() => {
         setIsLoading(true);
         getNewsData().then((ids) => setFetchedNewsID(ids.sort(compare)));
-        // console.log(
-        //     `данные обновились в ${new Date().getHours()}:${new Date().getMinutes()}`
-        // );
+        console.log(
+            `данные обновились в ${new Date().getHours()}:${new Date().getMinutes()}`
+        );
         setIsLoading(false);
     }, []);
 
@@ -81,7 +81,7 @@ export const Home = ({ id }) => {
                     </IconButton>
                     {/* отрисовка каждого ID в карточке */}
                     {fetchedNewsID.slice(0, 100).map((storyId, i) => (
-                        <NewsCard storyId={i} key={storyId} />
+                        <NewsCard storyId={storyId} key={i} />
                     ))}
                 </Group>
             )}

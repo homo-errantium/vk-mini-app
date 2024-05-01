@@ -9,7 +9,12 @@ import {
     Group,
     PanelSpinner,
     Card,
+    Link,
+    Spacing,
+    IconButton,
+    VisuallyHidden,
 } from '@vkontakte/vkui';
+import { Icon28SwitchOutline } from '@vkontakte/icons';
 import PropTypes from 'prop-types';
 import { NewsCommentCard } from './newsCommentCard';
 
@@ -67,6 +72,7 @@ export const NewsPageContent = ({ newsItemID }) => {
                 <Header
                     style={{
                         marginBottom: 10,
+                        padding: 5,
                     }}
                     size='large'
                     mode='secondary'
@@ -75,6 +81,19 @@ export const NewsPageContent = ({ newsItemID }) => {
                 </Header>
             }
         >
+            <IconButton
+                borderRadiusMode='auto'
+                hovered='true'
+                style={{
+                    marginBottom: 16,
+                }}
+                onClick={() => {
+                    getNewsItemInfo();
+                }}
+            >
+                <VisuallyHidden>Обновить</VisuallyHidden>
+                <Icon28SwitchOutline />
+            </IconButton>
             <Card
                 style={{
                     marginBottom: 10,
@@ -95,10 +114,16 @@ export const NewsPageContent = ({ newsItemID }) => {
                     time * 1000
                 ).toLocaleString()}`}</Footnote>
 
-                <Footnote style={{ fontSize: 16, marginBottom: 20 }} weight='3'>
-                    {`ссылка на новость: ${url}`}
-                </Footnote>
-                <Subhead>{kids && `${kids.length} comments`}</Subhead>
+                <Link
+                    target='_blank'
+                    href={`${url}`}
+                    style={{ fontSize: 16 }}
+                    weight='3'
+                >
+                    {url}
+                </Link>
+                <Spacing size={20} />
+                <Subhead>{`${kids ? kids.length : 0} comments`}</Subhead>
                 <Group
                     style={{
                         position: 'static',

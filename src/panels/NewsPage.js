@@ -12,6 +12,7 @@ export const NewsPage = ({ id }) => {
     useEffect(() => {
         setNewsItemID(reactLocalStorage.get('newItemId'));
     }, []);
+
     return (
         <Panel id={id}>
             <PanelHeader
@@ -28,5 +29,4 @@ export const NewsPage = ({ id }) => {
 
 NewsPage.propTypes = {
     id: PropTypes.string.isRequired,
-    newsItemID: PropTypes.string,
 };

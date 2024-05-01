@@ -5,8 +5,8 @@ export const KidCommentCard = ({ by, time, text }) => {
     return (
         <Card
             style={{
-                backgroundColor: 'grey',
-                opacity: 0.8,
+                backgroundColor: 'ButtonShadow',
+                // opacity: 0.8,
                 marginTop: 10,
                 marginBottom: 10,
                 padding: 10,

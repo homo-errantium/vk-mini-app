@@ -38,7 +38,7 @@ export const NewsCard = ({ storyId }) => {
             }}
             mode='shadow'
         >
-            <Title level='1' style={{ marginBottom: 15 }}>
+            <Title level='2' style={{ marginBottom: 15 }}>
                 {title}
             </Title>
             <Headline level='2' style={{ marginBottom: 15 }}>
@@ -61,5 +61,4 @@ export const NewsCard = ({ storyId }) => {
 
 NewsCard.propTypes = {
     storyId: PropTypes.number.isRequired,
-    // setNewsItemID: PropTypes.func.isRequired,
 };
