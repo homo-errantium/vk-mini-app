@@ -17,11 +17,11 @@ cписок технологий:
 
 ### ID Приложения: 51914808
 
-[vk.com](https://stage-app51914808-203451935ecf.pages.vk-apps.com/index.html)
+[vk.com](https://stage-app51914808-47add81e0c02.pages.vk-apps.com/index.html)
 
-[m.vk.com:](https://stage-app51914808-203451935ecf.pages.vk-apps.com/index.html)
+[m.vk.com:](https://stage-app51914808-47add81e0c02.pages.vk-apps.com/index.html)
 
-[iOS & Android](https://stage-app51914808-203451935ecf.pages.vk-apps.com/index.html)
+[iOS & Android](https://stage-app51914808-47add81e0c02.pages.vk-apps.com/index.html)
 
 ## 🚀 Общая информация о [VK Bridge](https://github.com/VKCOM/vk-bridge) + [VKUI](https://github.com/VKCOM/VKUI) + [VK Miniapps Router](https://github.com/VKCOM/vk-mini-apps-router) app
 
