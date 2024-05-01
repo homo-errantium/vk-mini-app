@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getNewsItemData, getComment } from '../services/api';
+import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import {
     Header,
     Title,
@@ -13,12 +14,14 @@ import {
     Spacing,
     IconButton,
     VisuallyHidden,
+    Div,
 } from '@vkontakte/vkui';
-import { Icon28SwitchOutline } from '@vkontakte/icons';
+import { Icon28SwitchOutline, Icon28HomeOutline } from '@vkontakte/icons';
 import PropTypes from 'prop-types';
 import { NewsCommentCard } from './newsCommentCard';
 
 export const NewsPageContent = ({ newsItemID }) => {
+    const routeNavigator = useRouteNavigator();
     // массив индексов корневых комментариев
     const [newsCommentsArr, setNewsCommentsArr] = useState([]);
 
@@ -81,19 +84,39 @@ export const NewsPageContent = ({ newsItemID }) => {
                 </Header>
             }
         >
-            <IconButton
-                borderRadiusMode='auto'
-                hovered='true'
+            <Div
                 style={{
-                    marginBottom: 16,
-                }}
-                onClick={() => {
-                    getNewsItemInfo();
+                    marginBottom: 15,
+                    padding: 0,
+                    display: 'flex',
+                    justifyContent: 'space-between',
                 }}
             >
-                <VisuallyHidden>Обновить</VisuallyHidden>
-                <Icon28SwitchOutline />
-            </IconButton>
+                <IconButton
+                    borderRadiusMode='auto'
+                    hovered='true'
+                    style={{
+                        marginBottom: 16,
+                    }}
+                    onClick={() => {
+                        getNewsItemInfo();
+                    }}
+                >
+                    <VisuallyHidden>Обновить</VisuallyHidden>
+                    <Icon28SwitchOutline />
+                </IconButton>
+                <IconButton
+                    borderRadiusMode='auto'
+                    hovered='true'
+                    style={{
+                        marginBottom: 16,
+                    }}
+                    onClick={() => routeNavigator.push('/')}
+                >
+                    <VisuallyHidden>Обновить</VisuallyHidden>
+                    <Icon28HomeOutline />
+                </IconButton>
+            </Div>
             <Card
                 style={{
                     marginBottom: 10,

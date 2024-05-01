@@ -13,10 +13,11 @@ export const KidCommentCard = ({ by, time, text }) => {
             }}
         >
             <Paragraph>{text}</Paragraph>
-            <Headline level='1' style={{ marginBottom: 16 }}>
+
+            <Headline level='1' style={{ marginBottom: 10 }}>
                 {`Автор: ${by}`}
             </Headline>
-            <Caption level='1' style={{ marginBottom: 16 }}>
+            <Caption level='1' style={{ marginBottom: 5 }}>
                 {`${new Date(time * 1000).toLocaleString()}`}
             </Caption>
         </Card>

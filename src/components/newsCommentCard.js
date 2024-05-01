@@ -6,6 +6,7 @@ import {
     Card,
     Button,
     Div,
+    Spacing,
 } from '@vkontakte/vkui';
 import { KidCommentCard } from './kidCommentCard';
 import { useEffect, useState } from 'react';
@@ -49,7 +50,8 @@ export const NewsCommentCard = ({ by, time, kids, text }) => {
                 padding: 10,
             }}
         >
-            <Paragraph>{text}</Paragraph>
+            <Paragraph style={{ marginBottom: 16 }}>{text}</Paragraph>
+            <Spacing size={16} />
             <Headline level='1' style={{ marginBottom: 16 }}>
                 {`Автор: ${by}`}
             </Headline>
